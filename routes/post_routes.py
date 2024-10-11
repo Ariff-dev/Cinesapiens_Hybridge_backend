@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify
 from models.post.post_model import PostSapiens
 from extensions import db
+from flask_jwt_extended import jwt_required
 
 post_bp = Blueprint('post', __name__)
 
 @post_bp.route('/posts', methods=['POST'])
+@jwt_required()
 def create_post():
     data = request.get_json()  # Obtener los datos JSON enviados desde el formulario
 
