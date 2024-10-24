@@ -9,7 +9,7 @@ alias deactivate 'test $?_OLD_VIRTUAL_PATH != 0 && setenv PATH "$_OLD_VIRTUAL_PA
 # Unset irrelevant variables.
 deactivate nondestructive
 
-setenv VIRTUAL_ENV "/home/ardev/Development/University/Projects/cinesapiens/cinesapiens_backend/.env"
+setenv VIRTUAL_ENV "/home/ardev/Development/University/cinesapiens/Cinesapiens_Hybridge_backend/.env"
 
 set _OLD_VIRTUAL_PATH="$PATH"
 setenv PATH "$VIRTUAL_ENV/bin:$PATH"

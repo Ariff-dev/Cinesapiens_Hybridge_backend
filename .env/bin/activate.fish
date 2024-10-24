@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/ardev/Development/University/Projects/cinesapiens/cinesapiens_backend/.env"
+set -gx VIRTUAL_ENV "/home/ardev/Development/University/cinesapiens/Cinesapiens_Hybridge_backend/.env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

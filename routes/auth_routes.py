@@ -44,6 +44,20 @@ def login():
         return jsonify({'message': 'Bad email or password'}), 401
 
     # Crear un token JWT
-    access_token = create_access_token(identity=user.id_user)
+    access_token = create_access_token({'id': user.id_user, 'role': user.user_role})
     
     return jsonify(access_token=access_token), 200
+
+@auth_bp.route('/promote/<int:user_id>', methods=['PUT'])
+def promote_user(user_id):
+    user = UserSapiens.query.get(user_id)
+
+    if not user:
+        return jsonify({'message': 'User not Found'}), 404
+    
+    user.user_role = 'sapiens'
+    db.session.commit()
+
+
+    return jsonify({'message': f'User {user.username} promoted to sapiens'})
+

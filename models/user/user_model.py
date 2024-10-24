@@ -8,6 +8,7 @@ class UserSapiens(db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
     user_password = db.Column(db.String(255), nullable=False)
     user_role = db.Column(db.String(50), nullable=False, default='standard')
+    apply = db.Column(db.Integer, default=0)
     
     def __repr__(self):
         return f"<UserSapiens {self.username}>"
