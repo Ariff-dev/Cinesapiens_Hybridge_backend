@@ -1,14 +1,16 @@
 from flask import Flask
-from extensions import db  # Importar db desde el nuevo archivo extensions
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from flask_cors import CORS  # Importar para habilitar CORS
-from flask_migrate import Migrate  # Importar Migrate directamente aquí
+from flask_migrate import Migrate
+from extensions import db  # Importar db desde el nuevo archivo extensions
 
 # Importar blueprints
 from routes.user_routes import user_bp
 from routes.post_routes import post_bp
 from routes.comments_routes import comment_bp
 from routes.auth_routes import auth_bp
+from routes.admin_routes import admin_bp
+
 
 app = Flask(__name__)
 
@@ -17,21 +19,27 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://cinesapiens:cinesapines202
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Clave secreta para JWT (ideal usar variables de entorno en producción)
-app.config['JWT_SECRET_KEY'] = 'Dedica88'
+app.config['JWT_SECRET_KEY'] = 'Dedica88'  # Cambia esto por una variable de entorno en producción
+
+# Habilitar CORS para todas las rutas
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Inicializar la base de datos, migraciones y JWT
 db.init_app(app)
-migrate = Migrate(app, db)  # Inicializar Migrate aquí, relacionando la app y db
+migrate = Migrate(app, db)  # Inicializar Migrate aquí
 jwt = JWTManager(app)
-
-# Habilitar CORS para todas las rutas
-CORS(app)
 
 # Registrar los Blueprints
 app.register_blueprint(user_bp)
 app.register_blueprint(post_bp)
 app.register_blueprint(comment_bp)
 app.register_blueprint(auth_bp)
+app.register_blueprint(admin_bp)
+
+# Manejo de errores (opcional)
+@app.errorhandler(500)
+def handle_500_error(e):
+    return {'message': 'Internal Server Error'}, 500
 
 # Ejecutar la aplicación
 if __name__ == '__main__':

@@ -32,13 +32,20 @@ def create_user():
 @user_bp.route('/apply', methods=['POST'])
 @jwt_required()
 def apply_sapiens():
-    current_user_id = get_jwt_identity()
-    user = UserSapiens.query.get(current_user_id)
+    current_user = get_jwt_identity()  # Obtiene el dict
+    current_user_id = current_user['id']  # Ajusta esto según la estructura de tu dict
+
+
+    user = UserSapiens.query.get(int(current_user_id))
+
+    if user is None:
+        return jsonify({'message': 'User not found.'}), 404
 
     if user.apply == 1:
-        return jsonify({'message': 'You have already applied to become a sapiens.'}), 400
+        return jsonify({'message': 'Ya haz aplicado a ser sapiens y tu solicitud esta en revisión.'}), 400
     
     user.apply = 1
     db.session.commit()
 
-    return jsonify({'message': 'Your application to become a sapiens has been received.'}), 200
+    return jsonify({'message': 'Tu solicitud para ser sapiens ha sido recibida.'}), 200
+
