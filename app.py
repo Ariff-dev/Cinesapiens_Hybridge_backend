@@ -10,6 +10,8 @@ from routes.post_routes import post_bp
 from routes.comments_routes import comment_bp
 from routes.auth_routes import auth_bp
 from routes.admin_routes import admin_bp
+from config import *
+
 
 
 app = Flask(__name__)
