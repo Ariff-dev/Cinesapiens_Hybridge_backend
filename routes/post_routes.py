@@ -60,3 +60,96 @@ def create_post():
         'description': post_description,
         'image_url': image_url
     }}), 201
+
+
+@post_bp.route('/posts', methods=['GET'])
+def get_posts():
+    posts = PostSapiens.query.all()  # O la lógica que uses para obtener las publicaciones
+    return jsonify([{
+        'id_post_sa': post.id_post_sa,
+        'post_name': post.post_name,
+        'post_description': post.post_description,
+        'image_url': post.image_url
+    } for post in posts])
+
+
+
+@post_bp.route('/edit-post/<int:post_id>', methods=['PUT'])
+@jwt_required()
+def edit_post(post_id):
+    try:
+        # Obtener la identidad del usuario
+        current_user = get_jwt_identity()
+        print("Current user:", current_user)  # Para depurar
+
+        # Si current_user es un diccionario, accede al ID así:
+        user_id = current_user if isinstance(current_user, int) else current_user['id']
+
+        # Verificar que el usuario exista y tenga el rol adecuado
+        user = UserSapiens.query.get(user_id)
+        
+        if not user:
+            return jsonify({'message': 'User not found'}), 404
+
+        if user.user_role != 'sapiens':
+            return jsonify({'message': 'Access denied, only sapiens can edit posts.'}), 403
+
+        # Obtener los nuevos datos del request
+        post_name = request.form.get('post_name')
+        post_description = request.form.get('post_description')
+        file = request.files.get('image')
+
+        # Buscar el post por ID
+        post = PostSapiens.query.get(post_id)
+        if not post:
+            return jsonify({'message': 'Post not found'}), 404
+
+        # Actualizar campos según los datos enviados
+        if post_name:
+            post.post_name = post_name
+        if post_description:
+            post.post_description = post_description
+        if file:
+            upload_result = cloudinary.uploader.upload(file)
+            post.image_url = upload_result['secure_url']
+
+        # Guardar los cambios
+        db.session.commit()
+
+        return jsonify({'message': 'Post updated successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
+
+@post_bp.route('/delete-post/<int:post_id>', methods=['DELETE'])
+@jwt_required()
+def delete_post(post_id):
+    try:
+        current_user = get_jwt_identity()
+        print("Current user:", current_user)  # Para depurar
+
+        # Si current_user es un diccionario, accede al ID así:
+        user_id = current_user if isinstance(current_user, int) else current_user['id']
+
+        user = UserSapiens.query.get(user_id)
+        
+        if not user:
+            return jsonify({'message': 'User not found'}), 404
+
+        if user.user_role != 'sapiens':
+            return jsonify({'message': 'Access denied, only sapiens can delete posts.'}), 403
+        
+        post = PostSapiens.query.get(post_id)
+        if not post:
+            return jsonify({'message': 'Post not found'}), 404
+
+        db.session.delete(post)
+        db.session.commit()
+
+        return jsonify({'message': 'Post deleted successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'message': str(e)}), 500
+
+
