@@ -6,7 +6,7 @@ comment_bp = Blueprint('comment', __name__)
 
 @comment_bp.route('/comments', methods=['POST'])
 def create_comment():
-    data = request.get_json()  # Obtener los datos JSON enviados desde el formulario
+    data = request.get_json()  
 
     # Validar los datos
     if not data or not data.get('id_user') or not data.get('id_post_sa') or not data.get('comment_user_post'):

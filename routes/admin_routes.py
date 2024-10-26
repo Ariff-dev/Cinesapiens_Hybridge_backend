@@ -20,8 +20,6 @@ def active_users():
 @jwt_required()
 def sapiens_applications():
     current_user = get_jwt_identity()  # Obtener el ID del usuario actual
-    print(f"Current user ID: {current_user}")  # Debug: imprimir el ID del usuario actual
-
     users = UserSapiens.query.filter_by(apply=1).all()  # Filtrar usuarios que han aplicado
     result = [
         {'id': user.id_user, 'username': user.username, 'email': user.email} 

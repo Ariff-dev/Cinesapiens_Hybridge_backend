@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
-from extensions import db  # Importar db desde el nuevo archivo extensions
+from extensions import db  
 
 # Importar blueprints
 from routes.user_routes import user_bp
@@ -20,15 +20,14 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://cinesapiens:cinesapines2024@192.168.100.22:5432/cinesapiens_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Clave secreta para JWT (ideal usar variables de entorno en producción)
-app.config['JWT_SECRET_KEY'] = 'Dedica88'  # Cambia esto por una variable de entorno en producción
+app.config['JWT_SECRET_KEY'] = 'Dedica88'  
 
 # Habilitar CORS para todas las rutas
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Inicializar la base de datos, migraciones y JWT
 db.init_app(app)
-migrate = Migrate(app, db)  # Inicializar Migrate aquí
+migrate = Migrate(app, db) 
 jwt = JWTManager(app)
 
 # Registrar los Blueprints

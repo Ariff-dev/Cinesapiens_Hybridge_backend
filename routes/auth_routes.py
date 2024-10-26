@@ -22,7 +22,7 @@ def register():
     new_user = UserSapiens(
         username=data['username'],
         email=data['email'],
-        user_password=data['user_password']  # Aquí deberías usar un hash seguro
+        user_password=data['user_password']  
     )
     
     db.session.add(new_user)
@@ -34,7 +34,6 @@ def register():
 def login():
     data = request.get_json()
 
-    # Validar los datos
     if not data or not data.get('email') or not data.get('user_password'):
         return jsonify({'message': 'Missing data'}), 400
 

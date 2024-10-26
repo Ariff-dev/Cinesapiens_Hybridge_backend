@@ -12,11 +12,10 @@ post_bp = Blueprint('post', __name__)
 def create_post():
     current_user = get_jwt_identity()
     print(current_user)
-    # Si current_user es un diccionario, extrae el ID
     if isinstance(current_user, dict):
-        user_id = current_user.get('id')  # Ajusta esto según tu implementación
+        user_id = current_user.get('id')  
     else:
-        user_id = int(current_user)  # Suponiendo que es un entero si no es un dict
+        user_id = int(current_user)  
 
     user = UserSapiens.query.get(user_id)
     if user is None:
@@ -64,7 +63,7 @@ def create_post():
 
 @post_bp.route('/posts', methods=['GET'])
 def get_posts():
-    posts = PostSapiens.query.all()  # O la lógica que uses para obtener las publicaciones
+    posts = PostSapiens.query.all()  
     return jsonify([{
         'id_post_sa': post.id_post_sa,
         'post_name': post.post_name,
@@ -78,9 +77,7 @@ def get_posts():
 @jwt_required()
 def edit_post(post_id):
     try:
-        # Obtener la identidad del usuario
         current_user = get_jwt_identity()
-        print("Current user:", current_user)  # Para depurar
 
         # Si current_user es un diccionario, accede al ID así:
         user_id = current_user if isinstance(current_user, int) else current_user['id']
@@ -127,9 +124,8 @@ def edit_post(post_id):
 def delete_post(post_id):
     try:
         current_user = get_jwt_identity()
-        print("Current user:", current_user)  # Para depurar
+        print("Current user:", current_user)  
 
-        # Si current_user es un diccionario, accede al ID así:
         user_id = current_user if isinstance(current_user, int) else current_user['id']
 
         user = UserSapiens.query.get(user_id)

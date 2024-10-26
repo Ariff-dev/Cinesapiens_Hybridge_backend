@@ -4,17 +4,14 @@ from extensions import db
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
-# Crear el Blueprint
 user_bp = Blueprint('user_bp', __name__)
 
-# Ejemplo de ruta GET para obtener todos los usuarios
 @user_bp.route('/users', methods=['GET'])
 def get_users():
     users = UserSapiens.query.all()
     users_list = [{'id_user': user.id_user, 'username': user.username, 'email': user.email, 'user_role': user.user_role} for user in users]
     return jsonify(users_list)
 
-# Ejemplo de ruta POST para crear un nuevo usuario
 @user_bp.route('/users', methods=['POST'])
 def create_user():
     data = request.get_json()
@@ -34,7 +31,7 @@ def create_user():
 @jwt_required()
 def apply_sapiens():
     current_user = get_jwt_identity()  # Obtiene el dict
-    current_user_id = current_user['id']  # Ajusta esto según la estructura de tu dict
+    current_user_id = current_user['id']  
 
 
     user = UserSapiens.query.get(int(current_user_id))
